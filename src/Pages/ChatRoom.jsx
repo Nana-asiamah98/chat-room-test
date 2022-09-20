@@ -10,16 +10,7 @@ const ChatRoom = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const store = () => {
-    if (localStorage.getItem("generalChats") !== null) {
-      localStorage.setItem("generalChats", JSON.stringify(chats));
-    }
-  };
-  
-
-  const broadCastMessage = () =>{
-    const newSentMessages = [...sentMessages];
-    
+  const broadCastMessage = () =>{    
     channel.addEventListener("message" ,(e) => {
       const newLol = JSON.parse(localStorage.getItem("chats"))
         console.log({newLol})
@@ -28,17 +19,15 @@ const ChatRoom = () => {
         // console.log(e);
     })
   }
-
   const handleSubmit = (e) => {
     e.preventDefault();
     const username = location.state;
     let localStorageData = JSON.parse(localStorage.getItem("chats") || "[]");
     const storedUsername = String(username).toLowerCase();
-  
     const allChats = [...localStorageData];
 
     if (
-      localStorage.getItem("username") === storedUsername.toLowerCase() &&
+      localStorage.getItem("users").includes(storedUsername.toLowerCase()) &&
       message !== ""
     ) {
       const newChat = {
