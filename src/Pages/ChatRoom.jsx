@@ -1,43 +1,70 @@
-import React, { useEffect, useState } from "react";
+import { BroadcastChannel } from "broadcast-channel";
+import React, { useEffect, useMemo, useState} from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
 const ChatRoom = () => {
   const [message, setMessage] = useState("");
   const [chats, setChats] = useState([]);
+  const [sentMessages, setSentMessages] = useState([]);
+  const channel = useMemo(() => new BroadcastChannel("chatroom"),[]);
   const location = useLocation();
   const navigate = useNavigate();
 
   const store = () => {
-    console.log("All Chats" , chats)
+    if (localStorage.getItem("generalChats") !== null) {
+      localStorage.setItem("generalChats", JSON.stringify(chats));
+    }
   };
+  
+
+  const broadCastMessage = () =>{
+    const newSentMessages = [...sentMessages];
+    
+    channel.addEventListener("message" ,(e) => {
+      const newLol = JSON.parse(localStorage.getItem("chats"))
+        console.log({newLol})
+      // console.log("New Data", JSON.parse(localStorage.getItem("chats")))
+      setChats(newLol)
+        // console.log(e);
+    })
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const username = location.state;
+    let localStorageData = JSON.parse(localStorage.getItem("chats") || "[]");
     const storedUsername = String(username).toLowerCase();
-    console.log("State -> ", username);
-    console.log("Username -> ", String(username).toLowerCase());
-    console.log("Exists -> ", localStorage.getItem(String(username).toLowerCase()));
+  
+    const allChats = [...localStorageData];
 
-    const allChats = [...chats];
-
-    if (localStorage.getItem("username") === storedUsername.toLowerCase()  && message !== "") {
+    if (
+      localStorage.getItem("username") === storedUsername.toLowerCase() &&
+      message !== ""
+    ) {
       const newChat = {
         username: username,
         message: message,
+        date: new Date().toLocaleString(),
       };
+      channel.postMessage(newChat);
       allChats.push(newChat);
       setChats([...allChats]);
       setMessage("");
-    }else{
-        alert("No User");
-        navigate("/");
+      localStorage.setItem("chats", JSON.stringify(allChats));
+      
+    } else if(message === ""){
+        alert("Empty Message")
+    }
+    else {
+      alert("No User");
+      navigate("/");
     }
   };
 
   useEffect(() => {
-    console.log("state", location.state);
-  });
+    // store();
+    broadCastMessage();
+  }, [chats]);
   return (
     <>
       <div>
