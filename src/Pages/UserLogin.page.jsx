@@ -38,6 +38,7 @@ const UserLogin = () => {
                   required
                     placeholder="Enter your name"
                     type="text"
+                    data-testId = "username"
                     value={username}
                     onChange={(e) => {
                       setUsername(e.target.value);
