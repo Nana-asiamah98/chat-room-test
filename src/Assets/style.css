@@ -1,0 +1,32 @@
+.main-message-end {
+  display: grid;
+  place-items: center;
+  padding-top: 100px ;
+  border-radius: 15px;
+  background-color: rgba(57, 192, 237, 0.2);
+}
+
+.main-message-start {
+  display: grid;
+  place-items: center;
+  border-radius: 15px;
+  background-color: rgba(129, 42, 78, 0.2);
+}
+.sub-message {
+  width: 270px;
+  padding: 10px;
+  font-size: 17px;
+}
+
+.fs-12 {
+  font-size: 12px;
+}
+
+.main-chat {
+  overflow-y: "scroll";
+  height: 40em;
+}
+
+.chat-box{
+    padding-top: 10px;
+}
