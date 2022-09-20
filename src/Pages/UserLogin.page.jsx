@@ -8,7 +8,7 @@ const UserLogin = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    localStorage.setItem("username", username);
+    localStorage.setItem("username", username.toLowerCase());
     navigate("chatRoom",{state: username});
     setUsername("");
   }
