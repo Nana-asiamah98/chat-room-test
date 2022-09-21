@@ -71,7 +71,7 @@ const ChatRoom = () => {
       <Row className="m-auto align=self-center mt-5">
         <Col md={{ span: 10, offset: 2 }}>
           <Card>
-            <Card.Header as={"h3"}>Hello,{location.state}</Card.Header>
+            <Card.Header data-testid="card-header" as={"h3"}>Hello,{location.state}</Card.Header>
             <Card.Body>
               <div className="overflow-auto main-chat">
                 {chats && chats.length > 0 ? (

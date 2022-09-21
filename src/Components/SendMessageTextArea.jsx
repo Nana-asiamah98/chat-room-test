@@ -16,6 +16,7 @@ const SendMessageTextArea = ({handleSubmit,message,setMessage})  => <div>
             as="textarea"
             placeholder="Enter Message"
             value={message}
+            data-testid="text-message"
             onChange={(e) => setMessage(e.target.value)} />
           <Button type="submit" variant="outline-success">
             Send
