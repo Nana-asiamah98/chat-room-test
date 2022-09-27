@@ -18,7 +18,7 @@ const SendMessageTextArea = ({handleSubmit,message,setMessage})  => <div>
             value={message}
             data-testid="text-message"
             onChange={(e) => setMessage(e.target.value)} />
-          <Button type="submit" variant="outline-success">
+          <Button type="submit" data-testid="text-message-button" variant="outline-success">
             Send
           </Button>
         </InputGroup>
