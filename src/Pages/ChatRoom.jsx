@@ -1,24 +1,31 @@
 import { BroadcastChannel } from "broadcast-channel";
-import React, { useEffect, useMemo, useState} from "react";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+
+
+import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { Card } from "react-bootstrap";
+import SendMessageTextArea from "../Components/SendMessageTextArea";
+import MessageBubble from "../Components/MessageBubble";
+
 
 const ChatRoom = () => {
   const [message, setMessage] = useState("");
   const [chats, setChats] = useState([]);
   const [sentMessages, setSentMessages] = useState([]);
-  const channel = useMemo(() => new BroadcastChannel("chatroom"),[]);
+  const channel = useMemo(() => new BroadcastChannel("chatroom"), []);
   const location = useLocation();
   const navigate = useNavigate();
 
-  const broadCastMessage = () =>{    
-    channel.addEventListener("message" ,(e) => {
-      const newLol = JSON.parse(localStorage.getItem("chats"))
-        console.log({newLol})
-      // console.log("New Data", JSON.parse(localStorage.getItem("chats")))
-      setChats(newLol)
-        // console.log(e);
-    })
-  }
+  const broadCastMessage = () => {
+    channel.addEventListener("message", (e) => {
+      const newLol = JSON.parse(localStorage.getItem("chats"));
+      setChats(newLol);
+    });
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const username = location.state;
@@ -40,55 +47,53 @@ const ChatRoom = () => {
       setChats([...allChats]);
       setMessage("");
       localStorage.setItem("chats", JSON.stringify(allChats));
-      
-    } else if(message === ""){
-        alert("Empty Message")
-    }
-    else {
+    } else if (message === "") {
+      alert("Empty Message");
+    } else {
       alert("No User");
       navigate("/");
     }
   };
 
+  const content = (username) => {
+    const isUser = username === location.state;
+    const res = isUser ? "end" : "start";
+    return res;
+  };
+
   useEffect(() => {
-    // store();
     broadCastMessage();
   }, [chats]);
+  
+  
   return (
-    <>
-      <div>
-        {chats && chats.length > 0 ? (
-          chats.map((chat, index) => (
-            <div key={index}>
-              <span>Chat : {chat.message} </span>
-              <span>From :{chat.username} </span>
-            </div>
-          ))
-        ) : (
-          <>
-            <span>No Messages</span>
-          </>
-        )}
-      </div>
-      <form
-        onSubmit={(e) => {
-          handleSubmit(e);
-        }}
-      >
-        <div>
-          <label>Message</label>
-          <input
-            type={"text"}
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-          />
-        </div>
+    <Container fluid="md">
+      <Row className="m-auto align=self-center mt-5">
+        <Col md={{ span: 10, offset: 2 }}>
+          <Card>
+            <Card.Header data-testid="card-header" as={"h3"}>Hello,{location.state}</Card.Header>
+            <Card.Body>
+              <div className="overflow-auto main-chat">
+                {chats && chats.length > 0 ? (
+                  chats.map((chat, index) => (
+                    <MessageBubble
+                    index={index}
+                    chat={chat}
+                    content={content}/>
+                  ))
+                ) : (
+                  <>
+                    <span>No Messages</span>
+                  </>
+                )}
+              </div>
 
-        <div>
-          <button type="submit">Send Message</button>
-        </div>
-      </form>
-    </>
+              <SendMessageTextArea handleSubmit={handleSubmit} message={message} setMessage={setMessage}/>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+    </Container>
   );
 };
 

@@ -18,10 +18,16 @@ const UserLogin = () => {
     e.preventDefault();
     const storedUsers = JSON.parse(localStorage.getItem("users") || "[]");
     const allUsers = [...storedUsers];
-    allUsers.push(username.toLowerCase());
-    setUsers([...allUsers]);
-    localStorage.setItem("users", JSON.stringify(allUsers));
-    navigate("chatRoom", { state: username });
+    if(username !== ""){
+      allUsers.push(username.toLowerCase());
+      setUsers([...allUsers]);
+      localStorage.setItem("users", JSON.stringify(allUsers));
+      navigate("chatRoom", { state: username });
+    }else{
+      alert("Enter Username");
+      window.location.reload();
+    }
+    
   };
 
   return (
@@ -38,13 +44,14 @@ const UserLogin = () => {
                   required
                     placeholder="Enter your name"
                     type="text"
+                    data-testid = "username-field"
                     value={username}
                     onChange={(e) => {
                       setUsername(e.target.value);
                     }}
                   />
                 </Form.Group>
-                <Button variant="primary" type="submit">
+                <Button variant="primary" data-testid="username-button" type="submit">
                   Submit
                 </Button>
               </Form>
